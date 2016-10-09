@@ -13,5 +13,6 @@ class AppSettingsSpec extends UnitSpec {
 
   it should "get the expected configurations" in {
     assert(localAddress != null)
+    assert(appName === "microservice")
   }
 }

@@ -1,7 +1,9 @@
 package com.graff.microservicestarter
 
-import com.typesafe.config.Config
+import com.typesafe.config.{Config, ConfigFactory}
 import java.net.InetAddress
+
+import scala.util.Try
 
 /**
   * Application settings, first gets settings from the deployment environment
@@ -17,4 +19,19 @@ final class AppSettings(conf: Option[Config] = None) {
 
   val localAddress = InetAddress.getLocalHost.getHostAddress
 
+  val rootConfig = conf match {
+    case Some(c) => c.withFallback(ConfigFactory.load())
+    case _ => ConfigFactory.load
+  }
+
+  // Config for all service specific configurations (NOT SPARK ETC)
+  val serviceConfig = rootConfig.getConfig("service")
+
+  val appName = serviceConfig.getString("appName")
+
+  /** Attempts to acquire from environment, then java system properties. */
+  def withFallback[T](env: Try[T], key: String): Option[T] = env match {
+    case null  => None
+    case value => value.toOption
+  }
 }
