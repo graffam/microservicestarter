@@ -10,7 +10,7 @@ class AppSettingsSpec extends UnitSpec {
 
   val settings = new AppSettings()
   import settings._
-
+  // Tests getting basic settings from the AppSetting class
   it should "get the expected configurations" in {
     assert(localAddress != null)
     assert(appName === "microservice")
